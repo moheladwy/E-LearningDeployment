@@ -1,0 +1,58 @@
+services:
+  jenkins:
+    build:
+      context: .                                  # Path to the Dockerfile in the current directory
+      dockerfile: Dockerfile                      # Explicitly specify the Dockerfile (optional if named Dockerfile)
+    image: myjenkins-blueocean:latest-jdk17       # Use the pre-built Jenkins image
+    container_name: jenkins-blueocean
+    networks:
+      jenkins_network:
+        aliases:
+          - jenkins
+    environment:
+      - DOCKER_HOST=tcp://docker:2376        # Link to the Docker service
+      - DOCKER_CERT_PATH=/certs/client       # Certs for TLS communication with Docker
+      - DOCKER_TLS_VERIFY=1                  # Enable TLS verification
+    volumes:
+      - jenkins-data:/var/jenkins_home          # Jenkins data volume
+      - jenkins-docker-certs:/certs/client:ro   # Certs mounted as read-only
+    ports:
+      - "8090:8080"                 # Jenkins UI port (custom port 8090)
+      - "50000:50000"               # Jenkins agent communication port
+    depends_on:
+      jenkins-docker:               # Ensure Docker-in-Docker starts first
+        condition: service_healthy  # Ensure Docker-in-Docker starts first
+    restart: on-failure             # Automatically restart on failure
+
+  jenkins-docker:
+    image: docker:dind
+    container_name: jenkins-docker
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    privileged: true
+    networks:
+      jenkins_network:
+        aliases:
+          - docker                                # Add 'docker' as an alias
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - jenkins-docker-certs:/certs/client    # Docker certs for TLS
+      - jenkins-data:/var/jenkins_home        # Jenkins home for shared data
+    ports:
+      - "2376:2376"                           # Docker-in-Docker exposed port
+    command: --storage-driver overlay2
+    restart: always                           # Always restart Docker service if it fails
+    healthcheck:
+      test: ["CMD", "docker", "info"]         # Check if Docker is running
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  jenkins-docker-certs:  # Shared certs volume
+  jenkins-data:          # Shared Jenkins data volume
+
+networks:
+  jenkins_network:
+    driver: bridge       # Network for Jenkins and Docker
