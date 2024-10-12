@@ -13,80 +13,82 @@ pipeline {
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
     }
 
-    stage('Checkout') {
-        steps {
-            git branch: "${BRANCH}", url: "${REPO_URL}"
+    stages{
+        stage('Checkout') {
+            steps {
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
         }
-    }
 
-    stage('Build Docker account') {
-        steps {
-            dir(ACCOUNT_SERVICE_DIR) {
+        stage('Build Docker account') {
+            steps {
+                dir(ACCOUNT_SERVICE_DIR) {
+                    script {
+                        sh 'docker build -t $DOCKER_IMAGE_ACCOUNT:${BUILD_TAG} .'
+                        echo "Docker image for account service built successfully."
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker course') {
+            steps {
+                dir(COURSE_SERVICE_DIR) {
+                    script {
+                        sh 'docker build -t $DOCKER_IMAGE_COURSE:${BUILD_TAG} .'
+                        echo "Docker image for course service built successfully."  
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Frontend') {
+            steps {
+                dir(FRONTEND_DIR) {
+                    script {
+                        sh 'docker build -t $DOCKER_IMAGE_FRONTEND:${BUILD_TAG} .'
+                        echo "Docker image for frontend built successfully."
+                    }
+                }
+            }
+        }
+
+        stage('Tag Docker Images as latest') {
+            steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE_ACCOUNT:${BUILD_TAG} .'
-                    echo "Docker image for account service built successfully."
+                    sh "docker tag ${DOCKER_IMAGE_ACCOUNT}:${BUILD_TAG} ${DOCKER_IMAGE_ACCOUNT}:latest"
+                    sh "docker tag ${DOCKER_IMAGE_COURSE}:${BUILD_TAG} ${DOCKER_IMAGE_COURSE}:latest"
+                    sh "docker tag ${DOCKER_IMAGE_FRONTEND}:${BUILD_TAG} ${DOCKER_IMAGE_FRONTEND}:latest"
+                    echo "Docker images tagged successfully."
                 }
             }
         }
-    }
 
-    stage('Build Docker course') {
-        steps {
-            dir(COURSE_SERVICE_DIR) {
+        stage('Login to Docker Hub') {
+            steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE_COURSE:${BUILD_TAG} .'
-                    echo "Docker image for course service built successfully."  
+                    // Login to Docker Hub using Jenkins credentials
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    }
                 }
             }
         }
-    }
 
-    stage('Build Docker Frontend') {
-        steps {
-            dir(FRONTEND_DIR) {
+        stage('Push Docker account') {
+            steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE_FRONTEND:${BUILD_TAG} .'
-                    echo "Docker image for frontend built successfully."
+                    sh "docker push ${DOCKER_IMAGE_ACCOUNT}:${BUILD_TAG}"
+                    sh "docker push ${DOCKER_IMAGE_ACCOUNT}:latest"
+
+                    sh "docker push ${DOCKER_IMAGE_COURSE}:${BUILD_TAG}"
+                    sh "docker push ${DOCKER_IMAGE_COURSE}:latest"
+
+                    sh "docker push ${DOCKER_IMAGE_FRONTEND}:${BUILD_TAG}"
+                    sh "docker push ${DOCKER_IMAGE_FRONTEND}:latest"
+                    
+                    echo "Docker image for account service pushed successfully."
                 }
-            }
-        }
-    }
-
-    stage('Tag Docker Images as latest') {
-        steps {
-            script {
-                sh "docker tag ${DOCKER_IMAGE_ACCOUNT}:${BUILD_TAG} ${DOCKER_IMAGE_ACCOUNT}:latest"
-                sh "docker tag ${DOCKER_IMAGE_COURSE}:${BUILD_TAG} ${DOCKER_IMAGE_COURSE}:latest"
-                sh "docker tag ${DOCKER_IMAGE_FRONTEND}:${BUILD_TAG} ${DOCKER_IMAGE_FRONTEND}:latest"
-                echo "Docker images tagged successfully."
-            }
-        }
-    }
-
-    stage('Login to Docker Hub') {
-        steps {
-            script {
-                // Login to Docker Hub using Jenkins credentials
-                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                }
-            }
-        }
-    }
-
-    stage('Push Docker account') {
-        steps {
-            script {
-                sh "docker push ${DOCKER_IMAGE_ACCOUNT}:${BUILD_TAG}"
-                sh "docker push ${DOCKER_IMAGE_ACCOUNT}:latest"
-
-                sh "docker push ${DOCKER_IMAGE_COURSE}:${BUILD_TAG}"
-                sh "docker push ${DOCKER_IMAGE_COURSE}:latest"
-
-                sh "docker push ${DOCKER_IMAGE_FRONTEND}:${BUILD_TAG}"
-                sh "docker push ${DOCKER_IMAGE_FRONTEND}:latest"
-                
-                echo "Docker image for account service pushed successfully."
             }
         }
     }
