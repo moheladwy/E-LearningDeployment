@@ -10,6 +10,7 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = 'only1adwy/client'
         REPO_URL = 'https://github.com/HunterElite0/online-learning-platform'
         BRANCH = 'main'
+        DOCKER_CREDENTIALS_ID = 'DOCKER_HUB_ID'
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
     }
 
@@ -67,7 +68,6 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub using Jenkins credentials
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                     }
