@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: courses-microservice
+    namespace: online-learning-platform-namespace
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: courses-microservice
+    template:
+        metadata:
+            labels:
+                app: courses-microservice
+        spec:
+            containers:
+                - name: courses-microservice
+                  image: only1adwy/courses:latest
+                  ports:
+                      - containerPort: 8080
+                      - containerPort: 9990
+                  resources:
+                      limits:
+                          memory: "2048Mi"
+                          cpu: "1000m"
+                      requests:
+                          memory: "512Mi"
+                          cpu: "250m"

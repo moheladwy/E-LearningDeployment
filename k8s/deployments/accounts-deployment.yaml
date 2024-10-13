@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: accounts-microservice
+    namespace: online-learning-platform-namespace
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: accounts-microservice
+    template:
+        metadata:
+            labels:
+                app: accounts-microservice
+        spec:
+            containers:
+                - name: accounts-microservice
+                  image: only1adwy/accounts:latest
+                  ports:
+                      - containerPort: 8081
+                  resources:
+                      limits:
+                          memory: "2048Mi"
+                          cpu: "1000m"
+                      requests:
+                          memory: "512Mi"
+                          cpu: "250m"

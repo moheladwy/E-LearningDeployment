@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: courses-service
+    namespace: online-learning-platform-namespace
+spec:
+    selector:
+        app: courses-microservice
+    ports:
+        - name: http
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+        - name: admin
+          protocol: TCP
+          port: 9990
+          targetPort: 9990
+    type: ClusterIP

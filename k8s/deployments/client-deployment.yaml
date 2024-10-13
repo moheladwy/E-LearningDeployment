@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: client-frontend
+    namespace: online-learning-platform-namespace
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: online-learning-platform-frontend
+    template:
+        metadata:
+            labels:
+                app: online-learning-platform-frontend
+        spec:
+            containers:
+                - name: client-frontend
+                  image: only1adwy/client:latest
+                  ports:
+                      - containerPort: 3000
+                  resources:
+                      limits:
+                          memory: "1024Mi"
+                          cpu: "500m"
+                      requests:
+                          memory: "250Mi"
+                          cpu: "125m"
