@@ -22,8 +22,7 @@ pipeline {
             steps {
                 ansiblePlaybook(
                     playbook: "${ANSIBLE_DIR}/apply_k8s_resources.yaml",
-                    inventory: "${ANSIBLE_DIR}/inventory.ini",
-                    sh "ansible-playbook -i ${inventory} ${playbook}"
+                    inventory: "${ANSIBLE_DIR}/inventory.ini"
                 )
             }
         }
