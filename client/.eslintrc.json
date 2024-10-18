@@ -1,0 +1,10 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react/jsx-key": "off",
+    "@next/next/no-async-client-component": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-no-comment-textnodes": "off"
+  }
+}

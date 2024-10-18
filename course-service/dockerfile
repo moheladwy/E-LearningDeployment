@@ -1,0 +1,22 @@
+# For deployment
+FROM maven:3.9.6-eclipse-temurin-17-alpine as build
+
+COPY learning /home/learning
+
+RUN mvn clean package -f "/home/learning/pom.xml"
+
+
+FROM quay.io/wildfly/wildfly as deploy
+
+# For deployment
+COPY --from=build /home/learning/target/learning.war /opt/jboss/wildfly/standalone/deployments/
+
+# For development
+# COPY learning/target/learning.war /opt/jboss/wildfly/standalone/deployments/
+
+RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
+
+EXPOSE 8080
+EXPOSE 9990
+
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0", "-c", "standalone-full.xml"]

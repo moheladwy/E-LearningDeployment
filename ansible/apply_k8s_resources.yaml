@@ -1,0 +1,57 @@
+---
+- hosts: all
+  become: yes # Run with sudo if necessary
+
+  vars:
+      k8s_folder: "/tmp/online-learning-platform/k8s" # Adjust path where the k8s folder is located on the target machine
+
+  tasks:
+      - name: Ensure kubectl is installed
+        command: kubectl version --client
+        register: kubectl_installed
+        ignore_errors: yes
+
+      - name: Fail if kubectl is not installed
+        fail:
+            msg: "kubectl is not installed on this machine."
+        when: kubectl_installed.rc != 0
+
+      - name: Apply Namespace
+        command: kubectl apply -f {{ k8s_folder }}/namespace.yaml
+        register: apply_namespace_output
+
+      - name: Show Namespace apply output
+        debug:
+            msg: "{{ apply_namespace_output.stdout }}"
+
+      - name: Apply Deployments
+        command: kubectl apply -f {{ item }}
+        loop:
+            - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
+            - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
+            - "{{ k8s_folder }}/deployments/client-deployment.yaml"
+        register: apply_deployment_output
+
+      - name: Show Deployments apply output
+        debug:
+            msg: "{{ apply_deployment_output.stdout }}"
+
+      - name: Apply Services
+        command: kubectl apply -f {{ item }}
+        loop:
+            - "{{ k8s_folder }}/services/accounts-service.yaml"
+            - "{{ k8s_folder }}/services/courses-service.yaml"
+            - "{{ k8s_folder }}/services/frontend-service.yaml"
+        register: apply_services_output
+
+      - name: Show Services apply output
+        debug:
+            msg: "{{ apply_services_output.stdout }}"
+
+      - name: Apply Ingress
+        command: kubectl apply -f {{ k8s_folder }}/services/ingress.yaml
+        register: apply_ingress_output
+
+      - name: Show Ingress apply output
+        debug:
+            msg: "{{ apply_ingress_output.stdout }}"
