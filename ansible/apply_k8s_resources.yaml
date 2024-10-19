@@ -15,7 +15,8 @@
       fail:
         msg: "kubectl is not installed on this machine."
       when: kubectl_installed.rc != 0
-
+    - name: Set KUBECONFIG
+      shell: export KUBECONFIG=/var/lib/jenkins/.kube/config
     - name: Apply Namespace
       command: kubectl apply -f {{ k8s_folder }}/namespace.yaml --validate=false
       register: apply_namespace_output
