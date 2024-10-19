@@ -4,6 +4,7 @@
 
   vars:
     k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s"  # Path where the k8s folder is located
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Ensure kubectl is installed
