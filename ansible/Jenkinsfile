@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = "${env.WORKSPACE}/.kube/config"  // Set the KUBECONFIG variable
+    }
+
     stages {
         stage('Checkout') {
             steps {
