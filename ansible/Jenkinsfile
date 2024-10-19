@@ -9,6 +9,8 @@ pipeline {
         REPO_URL = 'https://github.com/moheladwy/E-LearningDeployment'
         BRANCH = 'main'
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
+        PATH = "${env.PATH}:/usr/local/bin" // Update this path if Ansible is installed elsewhere
+
     }
 
     stages{
