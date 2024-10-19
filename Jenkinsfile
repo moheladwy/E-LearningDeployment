@@ -12,9 +12,10 @@ pipeline {
         BRANCH = 'main'
         DOCKER_CREDENTIALS_ID = 'DOCKER_HUB_ID'
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
+        KUBECONFIG = '/var/lib/jenkins/.kube/config' // Ensure this path is correct
     }
 
-    stages{
+    stages {
         stage('Checkout') {
             steps {
                 git branch: "${BRANCH}", url: "${REPO_URL}"
@@ -37,7 +38,7 @@ pipeline {
                 dir(COURSE_SERVICE_DIR) {
                     script {
                         sh 'docker build -t $DOCKER_IMAGE_COURSE:${BUILD_TAG} .'
-                        echo "Docker image for course service built successfully."  
+                        echo "Docker image for course service built successfully."
                     }
                 }
             }
@@ -75,20 +76,27 @@ pipeline {
             }
         }
 
-        stage('Push Docker account') {
+        stage('Push Docker Images') {
             steps {
                 script {
                     sh "docker push ${DOCKER_IMAGE_ACCOUNT}:${BUILD_TAG}"
                     sh "docker push ${DOCKER_IMAGE_ACCOUNT}:latest"
-
                     sh "docker push ${DOCKER_IMAGE_COURSE}:${BUILD_TAG}"
                     sh "docker push ${DOCKER_IMAGE_COURSE}:latest"
-
                     sh "docker push ${DOCKER_IMAGE_FRONTEND}:${BUILD_TAG}"
                     sh "docker push ${DOCKER_IMAGE_FRONTEND}:latest"
-                    
-                    echo "Docker image for account service pushed successfully."
+                    echo "Docker images pushed successfully."
                 }
+            }
+        }
+
+        // Kubernetes Deployment Stage
+        stage('Run Ansible Playbook') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'ansible/apply_k8s_resources.yaml',
+                    inventory: 'ansible/inventory.ini'
+                )
             }
         }
     }
