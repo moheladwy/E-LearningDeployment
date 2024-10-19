@@ -1,39 +1,19 @@
 pipeline {
     agent any
 
-    environment {
-        ACCOUNT_SERVICE_DIR = 'account-service'
-        COURSE_SERVICE_DIR = 'course-service'
-        FRONTEND_DIR = 'client'
-        ANSIBLE_DIR = 'ansible'
-        REPO_URL = 'https://github.com/moheladwy/E-LearningDeployment'
-        BRANCH = 'main'
-        BUILD_TAG = "V1.${env.BUILD_NUMBER}"
-        PATH = "${env.PATH}:/usr/bin" // Add Ansible's path
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${BRANCH}", url: "${REPO_URL}"
-            }
-        }
-
-        stage('Check Ansible Installation') {
-            steps {
-                script {
-                    sh 'echo $PATH'  // Print the PATH
-                    sh 'which ansible-playbook'  // Check where ansible-playbook is located
-                    sh 'ansible-playbook --version'  // Check Ansible version
-                }
+                git branch: 'main', url: 'https://github.com/moheladwy/E-LearningDeployment'
             }
         }
 
         stage('Run Ansible Playbook') {
             steps {
-                script {
-                    sh "ansible-playbook ${ANSIBLE_DIR}/apply_k8s_resources.yaml -i ${ANSIBLE_DIR}/inventory.ini"
-                }
+                ansiblePlaybook(
+                    playbook: 'ansible/apply_k8s_resources.yaml',
+                    inventory: 'ansible/inventory.ini'
+                )
             }
         }
     }
