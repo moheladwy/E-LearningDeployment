@@ -1,53 +1,70 @@
 ---
 - hosts: all
-  become: yes # Run with sudo if necessary
+  become: yes  # Run with sudo if necessary
 
   vars:
-      k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s" # Adjust path where the k8s folder is located on the target machine
+    k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s"  # Path to the k8s folder
 
   tasks:
-      - name: Ensure kubectl is installed
-        command: kubectl version --client
-        register: kubectl_installed
-        ignore_errors: yes 
-      
-      - name: Fail if kubectl is not installed
-        fail:
-          msg: "kubectl is not installed on this machine."
-        when: kubectl_installed.rc != 0
+    - name: Ensure kubectl is installed
+      command: kubectl version --client
+      register: kubectl_installed
+      ignore_errors: yes
 
-      - name: Set KUBECONFIG environment variable
-        ansible.builtin.shell: |
-          export KUBECONFIG=$(minikube -p minikube config view --raw)
-      
-      - name: Apply Namespace
-        ansible.builtin.command:
-          cmd: kubectl apply -f /home/mohamedelsadat/Desktop/E-LearningDeployment/k8s/namespace.yaml --validate=false
-        environment:
-          KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+    - name: Fail if kubectl is not installed
+      fail:
+        msg: "kubectl is not installed on this machine."
+      when: kubectl_installed.rc != 0
 
-      - name: Apply Deployments
-        command: kubectl apply -f "{{ item }}" --validate=false
-        loop:
-          - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
-          - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
-          - "{{ k8s_folder }}/deployments/client-deployment.yaml"
-        environment:
-          KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
-        register: apply_services_output
+    - name: Set KUBECONFIG environment variable
+      set_fact:
+        kubecfg: "{{ lookup('env', 'KUBECONFIG') }}"
 
-      - name: Apply Services
-        command: kubectl apply -f {{ item }} --validate=false
-        loop:
-          - "{{ k8s_folder }}/services/accounts-service.yaml"
-          - "{{ k8s_folder }}/services/courses-service.yaml"
-          - "{{ k8s_folder }}/services/frontend-service.yaml"
-        environment:
-          KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
-        register: apply_services_output
+    - name: Apply Namespace
+      command: kubectl apply -f {{ k8s_folder }}/namespace.yaml --validate=false
+      environment:
+        KUBECONFIG: "{{ kubecfg }}"
+      register: apply_namespace_output
 
-      - name: Apply Ingress
-        shell: kubectl apply -f /home/mohamedelsadat/Desktop/E-LearningDeployment/k8s/services/ingress.yaml --validate=false
-        register: apply_ingress_output
-        environment:
-          KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+    - name: Check if namespace creation was successful
+      debug:
+        var: apply_namespace_output
+
+    - name: Apply Deployments
+      command: kubectl apply -f "{{ item }}" --validate=false
+      loop:
+        - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
+        - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
+        - "{{ k8s_folder }}/deployments/client-deployment.yaml"
+      environment:
+        KUBECONFIG: "{{ kubecfg }}"
+      register: apply_deployments_output
+
+    - name: Check if deployments were successful
+      debug:
+        var: apply_deployments_output
+
+    - name: Apply Services
+      command: kubectl apply -f "{{ item }}" --validate=false
+      loop:
+        - "{{ k8s_folder }}/services/accounts-service.yaml"
+        - "{{ k8s_folder }}/services/courses-service.yaml"
+        - "{{ k8s_folder }}/services/frontend-service.yaml"
+      environment:
+        KUBECONFIG: "{{ kubecfg }}"
+      register: apply_services_output
+
+    - name: Check if services were successful
+      debug:
+        var: apply_services_output
+
+    - name: Apply Ingress
+      command: kubectl apply -f "{{ k8s_folder }}/services/ingress.yaml" --validate=false
+      environment:
+        KUBECONFIG: "{{ kubecfg }}"
+      register: apply_ingress_output
+
+    - name: Check if ingress was successful
+      debug:
+        var: apply_ingress_output
+
