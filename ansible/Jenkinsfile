@@ -1,14 +1,21 @@
 pipeline {
     agent any
 
-    environment {
-        KUBECONFIG = "${env.WORKSPACE}/.kube/config"  // Set the KUBECONFIG variable
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/moheladwy/E-LearningDeployment'
+            }
+        }
+
+        stage('Set KUBECONFIG') {
+            steps {
+                script {
+                    // Echo current KUBECONFIG (this may be empty at first)
+                    sh 'echo $KUBECONFIG'
+                    // Set KUBECONFIG to the desired path
+                    sh 'export KUBECONFIG=~/.kube/config'
+                }
             }
         }
 
