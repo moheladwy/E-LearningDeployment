@@ -1,9 +1,9 @@
----
-- hosts: all
+- name: Apply Kubernetes Resources
+  hosts: localhost
   become: yes  # Run with sudo if necessary
 
   vars:
-    k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s"  # Path to the k8s folder
+    k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s"  # Path where the k8s folder is located
 
   tasks:
     - name: Ensure kubectl is installed
@@ -16,19 +16,15 @@
         msg: "kubectl is not installed on this machine."
       when: kubectl_installed.rc != 0
 
-    - name: Set KUBECONFIG environment variable
-      set_fact:
-        kubecfg: "{{ lookup('env', 'KUBECONFIG') }}"
-
     - name: Apply Namespace
       command: kubectl apply -f {{ k8s_folder }}/namespace.yaml --validate=false
-      environment:
-        KUBECONFIG: "{{ kubecfg }}"
       register: apply_namespace_output
+      environment:
+        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-    - name: Check if namespace creation was successful
+    - name: Show Namespace apply output
       debug:
-        var: apply_namespace_output
+        msg: "{{ apply_namespace_output.stdout }}"
 
     - name: Apply Deployments
       command: kubectl apply -f "{{ item }}" --validate=false
@@ -36,13 +32,10 @@
         - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
         - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
         - "{{ k8s_folder }}/deployments/client-deployment.yaml"
+      register: apply_deployment_output
       environment:
-        KUBECONFIG: "{{ kubecfg }}"
-      register: apply_deployments_output
+        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-    - name: Check if deployments were successful
-      debug:
-        var: apply_deployments_output
 
     - name: Apply Services
       command: kubectl apply -f "{{ item }}" --validate=false
@@ -50,21 +43,13 @@
         - "{{ k8s_folder }}/services/accounts-service.yaml"
         - "{{ k8s_folder }}/services/courses-service.yaml"
         - "{{ k8s_folder }}/services/frontend-service.yaml"
-      environment:
-        KUBECONFIG: "{{ kubecfg }}"
       register: apply_services_output
+      environment:
+        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-    - name: Check if services were successful
-      debug:
-        var: apply_services_output
 
     - name: Apply Ingress
-      command: kubectl apply -f "{{ k8s_folder }}/services/ingress.yaml" --validate=false
-      environment:
-        KUBECONFIG: "{{ kubecfg }}"
+      command: kubectl apply -f {{ k8s_folder }}/services/ingress.yaml --validate=false
       register: apply_ingress_output
-
-    - name: Check if ingress was successful
-      debug:
-        var: apply_ingress_output
-
+      environment:
+        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
