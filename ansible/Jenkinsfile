@@ -6,7 +6,7 @@ pipeline {
         COURSE_SERVICE_DIR = 'course-service'
         FRONTEND_DIR = 'client'
         ANSIBLE_DIR = 'ansible'
-        REPO_URL = 'https://github.com/HunterElite0/online-learning-platform'
+        REPO_URL = 'https://github.com/moheladwy/E-LearningDeployment'
         BRANCH = 'main'
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
     }
