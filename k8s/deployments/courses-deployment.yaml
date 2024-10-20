@@ -21,6 +21,7 @@ spec:
             containers:
                 - name: courses-microservice
                   image: only1adwy/courses:latest
+                  imagePullPolicy: Always
                   ports:
                       - containerPort: 8080
                       - containerPort: 9990

@@ -5,14 +5,13 @@ pipeline {
         ACCOUNT_SERVICE_DIR = 'account-service'
         COURSE_SERVICE_DIR = 'course-service'
         FRONTEND_DIR = 'client'
-        DOCKER_IMAGE_ACCOUNT = 'mohamedelsadat/account-service'
-        DOCKER_IMAGE_COURSE = 'mohamedelsadat/course-service'
-        DOCKER_IMAGE_FRONTEND = 'mohamedelsadat/client-service'
+        DOCKER_IMAGE_ACCOUNT = 'only1adwy/account-service'
+        DOCKER_IMAGE_COURSE = 'only1adwy/course-service'
+        DOCKER_IMAGE_FRONTEND = 'only1adwy/client-service'
         REPO_URL = 'https://github.com/moheladwy/E-LearningDeployment.git'
         BRANCH = 'main'
         DOCKER_CREDENTIALS_ID = 'DOCKER_HUB_ID'
         BUILD_TAG = "V1.${env.BUILD_NUMBER}"
-        KUBECONFIG = '/var/lib/jenkins/.kube/config' // Ensure this path is correct
     }
 
     stages {
@@ -90,15 +89,6 @@ pipeline {
             }
         }
 
-        // Kubernetes Deployment Stage
-        stage('Run Ansible Playbook') {
-            steps {
-                ansiblePlaybook(
-                    playbook: 'ansible/apply_k8s_resources.yaml',
-                    inventory: 'ansible/inventory.ini'
-                )
-            }
-        }
     }
 
     post {

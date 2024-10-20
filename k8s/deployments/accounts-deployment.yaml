@@ -21,6 +21,7 @@ spec:
             containers:
                 - name: accounts-microservice
                   image: only1adwy/accounts:latest
+                  imagePullPolicy: Always
                   ports:
                       - containerPort: 8081
                   resources:

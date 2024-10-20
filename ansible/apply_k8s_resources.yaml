@@ -1,57 +1,57 @@
 - name: Apply Kubernetes Resources
   hosts: localhost
-  become: yes  # Run with sudo if necessary
+  become: yes # Run with sudo if necessary
+
+  environment:
+      KUBECONFIG: "/home/eladwy/.kube/config" # Path to the kubeconfig file
 
   vars:
-    k8s_folder: "/home/mohamedelsadat/Desktop/E-LearningDeployment/k8s"  # Path where the k8s folder is located
-    ansible_python_interpreter: /usr/bin/python3
+      k8s_folder: "/home/eladwy/github/E-LearningDeployment/k8s" # Path where the k8s folder is located
+      ansible_python_interpreter: /usr/bin/python3
 
   tasks:
-    - name: Ensure kubectl is installed
-      command: kubectl version --client
-      register: kubectl_installed
-      ignore_errors: yes
+      - name: Ensure kubectl is installed
+        command: kubectl version --client
+        register: kubectl_installed
+        ignore_errors: yes
 
-    - name: Fail if kubectl is not installed
-      fail:
-        msg: "kubectl is not installed on this machine."
-      when: kubectl_installed.rc != 0
-    - name: Set KUBECONFIG
-      shell: export KUBECONFIG=/var/lib/jenkins/.kube/config
-    - name: Apply Namespace
-      command: kubectl apply -f {{ k8s_folder }}/namespace.yaml --validate=false
-      register: apply_namespace_output
-      environment:
-        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+      - name: Fail if kubectl is not installed
+        fail:
+            msg: "kubectl is not installed on this machine."
+        when: kubectl_installed.rc != 0
 
-    - name: Show Namespace apply output
-      debug:
-        msg: "{{ apply_namespace_output.stdout }}"
+      - name: Apply Namespace
+        command: kubectl apply -f {{ k8s_folder }}/namespace.yaml --validate=false
+        register: apply_namespace_output
+        environment:
+            KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-    - name: Apply Deployments
-      command: kubectl apply -f "{{ item }}" --validate=false
-      loop:
-        - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
-        - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
-        - "{{ k8s_folder }}/deployments/client-deployment.yaml"
-      register: apply_deployment_output
-      environment:
-        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+      - name: Show Namespace apply output
+        debug:
+            msg: "{{ apply_namespace_output.stdout }}"
 
+      - name: Apply Deployments
+        command: kubectl apply -f "{{ item }}" --validate=false
+        loop:
+            - "{{ k8s_folder }}/deployments/accounts-deployment.yaml"
+            - "{{ k8s_folder }}/deployments/courses-deployment.yaml"
+            - "{{ k8s_folder }}/deployments/client-deployment.yaml"
+        register: apply_deployment_output
+        environment:
+            KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-    - name: Apply Services
-      command: kubectl apply -f "{{ item }}" --validate=false
-      loop:
-        - "{{ k8s_folder }}/services/accounts-service.yaml"
-        - "{{ k8s_folder }}/services/courses-service.yaml"
-        - "{{ k8s_folder }}/services/frontend-service.yaml"
-      register: apply_services_output
-      environment:
-        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+      - name: Apply Services
+        command: kubectl apply -f "{{ item }}" --validate=false
+        loop:
+            - "{{ k8s_folder }}/services/accounts-service.yaml"
+            - "{{ k8s_folder }}/services/courses-service.yaml"
+            - "{{ k8s_folder }}/services/frontend-service.yaml"
+        register: apply_services_output
+        environment:
+            KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
-
-    - name: Apply Ingress
-      command: kubectl apply -f {{ k8s_folder }}/services/ingress.yaml --validate=false
-      register: apply_ingress_output
-      environment:
-        KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
+      - name: Apply Ingress
+        command: kubectl apply -f {{ k8s_folder }}/services/ingress.yaml --validate=false
+        register: apply_ingress_output
+        environment:
+            KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"

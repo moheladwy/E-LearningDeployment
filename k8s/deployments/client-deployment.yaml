@@ -21,6 +21,7 @@ spec:
             containers:
                 - name: client-frontend
                   image: only1adwy/client:latest
+                  imagePullPolicy: Always
                   ports:
                       - containerPort: 3000
                   resources:
