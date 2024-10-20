@@ -22,6 +22,11 @@ spec:
                 - name: client-frontend
                   image: only1adwy/client:latest
                   imagePullPolicy: Always
+                  env:
+                      - name: NEXT_PUBLIC_COURSE
+                        value: "192.168.49.2"
+                      - name: NEXT_PUBLIC_ACCOUNT
+                        value: "192.168.49.2"
                   ports:
                       - containerPort: 3000
                   resources:
