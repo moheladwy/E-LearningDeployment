@@ -22,6 +22,3 @@ services:
         container_name: client-service
         ports:
             - "3000:3000"
-        environment:
-            - NEXT_PUBLIC_COURSE=localhost
-            - NEXT_PUBLIC_ACCOUNT=localhost
