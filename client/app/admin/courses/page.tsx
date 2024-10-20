@@ -12,10 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { CourseCard } from "@/components/course-card";
-import { course } from "@/app/config";
+import { courseAPI } from "@/app/config";
 
 async function getAllCourses(id: number) {
-	const URL: string = course + ":8080/learning/course/all/";
+	const URL: string = courseAPI + ":8080/learning/course/all/";
 	const cookie = require("js-cookie");
 	const res = await fetch(URL, {
 		method: "GET",

@@ -1,6 +1,6 @@
 "use client";
 
-import { course } from "@/app/config";
+import { courseAPI } from "@/app/config";
 import { EnrollmentCard } from "@/components/enrollment-card";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 async function fetchEnrollments(token: string) {
 	// const URL = "http://localhost:8080/learning/enrollment/instructor-list";
 	const URL =
-		course + ":8080/learning/enrollment/instructor-list/";
+		courseAPI + ":8080/learning/enrollment/instructor-list/";
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -26,7 +26,7 @@ async function fetchEnrollments(token: string) {
 
 const handleAccept = async (enrollmentId: number) => {
 	// const URL = "http://localhost:8080/learning/enrollment/accept/";
-	const URL = course + ":8080/learning/enrollment/accept/";
+	const URL = courseAPI + ":8080/learning/enrollment/accept/";
 
 	const jwt = require("js-cookie").get("jwt");
 	const response = await fetch(URL + enrollmentId, {
@@ -46,7 +46,7 @@ const handleAccept = async (enrollmentId: number) => {
 
 const handleReject = async (enrollmentId: number) => {
 	// const URL = "http://localhost:8080/learning/enrollment/reject/";
-	const URL = course + ":8080/learning/enrollment/reject/";
+	const URL = courseAPI + ":8080/learning/enrollment/reject/";
 
 	const jwt = require("js-cookie").get("jwt");
 	const response = await fetch(URL + enrollmentId, {

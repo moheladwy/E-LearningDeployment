@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { course } from "@/app/config";
+import { courseAPI } from "@/app/config";
 
 async function getCourseDetails(id: number) {
-	const URL = course + ":8080/learning/course/" + id;
+	const URL = courseAPI + ":8080/learning/course/" + id;
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -19,7 +19,7 @@ async function getCourseDetails(id: number) {
 }
 
 const handleEnroll = async (id: number) => {
-	const URL = course + ":8080/learning/enroll/";
+	const URL = courseAPI + ":8080/learning/enroll/";
 	const cookie = require("js-cookie");
 	const payload = {
 		jwt: cookie.get("jwt"),

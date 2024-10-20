@@ -1,11 +1,11 @@
 "use client";
-import { course } from "@/app/config";
+import { courseAPI } from "@/app/config";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
 async function getAllNotifications(token: string) {
 	// const URL: string = "http://localhost:8080/learning/notifications/";
-	const URL: string = course + "/learning/notifications/";
+	const URL: string = courseAPI + "/learning/notifications/";
 	const res = await fetch(URL, {
 		method: "GET",
 		headers: {
