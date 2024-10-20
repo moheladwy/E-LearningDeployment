@@ -40,16 +40,13 @@ export default function LoginForm() {
 	const router = useRouter();
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		const response = await fetch(
-			accountAPI + ":8081/account/login",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+		const response = await fetch(accountAPI + ":8081/account/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
 
 		if (response.ok) {
 			const result = await response.json();
@@ -57,7 +54,6 @@ export default function LoginForm() {
 			Cookies.set(result.cookie.name, result.cookie.token);
 			Cookies.set("id", claims.id);
 			Cookies.set("role", claims.role.toLowerCase());
-			// console.log(claims);
 			alert("Login successful!");
 
 			if (claims.role.toLowerCase() == "student") {
