@@ -22,3 +22,5 @@ services:
         container_name: client-service
         ports:
             - "3000:3000"
+        environment:
+            - main_ip=value
