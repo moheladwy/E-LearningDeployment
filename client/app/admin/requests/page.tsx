@@ -1,11 +1,12 @@
 "use client";
 
+import { course } from "@/app/config";
 import { CourseRequestCard } from "@/components/course-card-adm";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 async function fetchPendingCourseRequests(token: string) {
-	const URL = "http://courses-service:8080/learning/course/pending";
+	const URL = course + ":8080/learning/course/pending";
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -21,7 +22,7 @@ async function fetchPendingCourseRequests(token: string) {
 }
 
 const handleAccept = async (courseId: number) => {
-	const URL = "http://courses-service:8080/learning/course/accept/";
+	const URL = course + ":8080/learning/course/accept/";
 	const jwt = require("js-cookie").get("jwt");
 	const response = await fetch(URL + courseId, {
 		method: "PUT",
@@ -39,7 +40,7 @@ const handleAccept = async (courseId: number) => {
 };
 
 const handleReject = async (courseId: number) => {
-	const URL = "http://courses-service:8080/learning/course/reject/";
+	const URL = course + ":8080/learning/course/reject/";
 	const jwt = require("js-cookie").get("jwt");
 	const response = await fetch(URL + courseId, {
 		method: "PUT",

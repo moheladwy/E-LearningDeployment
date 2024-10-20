@@ -23,6 +23,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { account } from "@/app/config";
 
 const FormSchema = z.object({
 	username: z.string().min(2, {
@@ -53,7 +54,7 @@ export default function Component({ params }: { params: { id: number } }) {
 		async function fetchAccountDetails() {
 			try {
 				const URL =
-					"http://accounts-service:8081/account/user/" + params.id;
+					account + ":8081/account/user/" + params.id;
 				const response = await fetch(URL);
 				const data = await response.json();
 				setInitialValues(data);
@@ -95,7 +96,7 @@ export default function Component({ params }: { params: { id: number } }) {
 			id: Number(params.id),
 		};
 		const response = await fetch(
-			"http://accounts-service:8081/account/update",
+			account + ":8081/account/update",
 			{
 				method: "PUT",
 				headers: {

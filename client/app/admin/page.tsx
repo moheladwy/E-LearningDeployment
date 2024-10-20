@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { UserDropdown } from "@/components/account-dropdown";
 import { cookies } from "next/headers";
+import { course, account } from "../config";
 
 async function getAccountDetails(id: number) {
-	const URL: string = "http://accounts-service:8081/account/user/" + id;
+	const URL: string = account + ":8081/account/user/" + id;
 	// const URL: string = "http://localhost:8081/account/user/" + id;
 	try {
 		const res = await fetch(URL);
@@ -16,7 +17,7 @@ async function getAccountDetails(id: number) {
 }
 
 async function fetchAccountStats() {
-	const URL: string = "http://accounts-service:8081/account/stats";
+	const URL: string = account + ":8081/account/stats";
 	// const URL: string = "http://localhost:8081/account/stats";
 	try {
 		const res = await fetch(URL, {
@@ -35,7 +36,7 @@ async function fetchAccountStats() {
 }
 
 async function fetchCourseStats() {
-	const URL: string = "http://courses-service:8080/learning/course/stats";
+	const URL: string = course + ":8080/learning/course/stats";
 	// const URL: string = "http://localhost:8080/learning/course/stats";
 
 	const res = await fetch(URL, {
@@ -50,7 +51,7 @@ async function fetchCourseStats() {
 }
 
 async function fetchEnrollmentStats() {
-	const URL: string = "http://courses-service:8080/learning/enrollment/stats";
+	const URL: string = course + ":8080/learning/enrollment/stats";
 	// const URL: string = "http://localhost:8080/learning/enrollment/stats";
 	const res = await fetch(URL, {
 		method: "GET",

@@ -1,12 +1,13 @@
 "use client";
 
+import { course } from "@/app/config";
 import { EnrollmentCardStud } from "@/components/enrollment-card-stud";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 async function fetchEnrollments(token: string) {
 	// const URL = "http://localhost:8080/learning/enrollment/student-list";
-	const URL = "http://courses-service:8080/learning/enrollment/student-list/";
+	const URL = course + ":8080/learning/enrollment/student-list/";
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -24,7 +25,7 @@ async function fetchEnrollments(token: string) {
 
 async function cancelEnrollment(token: string, enrollmentId: number) {
 	const URL =
-		"http://courses-service:8080/learning/enrollment/cancel/" +
+		course + ":8080/learning/enrollment/cancel/" +
 		enrollmentId;
 	const response = await fetch(URL, {
 		method: "DELETE",
