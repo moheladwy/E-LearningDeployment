@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AccountCard } from "@/components/account-card";
+import { account } from "@/app/config";
 
 async function fetchAllAccounts(token: string) {
-	const URL = "http://accounts-service:8081/account/users";
+	const URL = account + ":8081/account/users";
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -26,7 +27,7 @@ const handleEdit = async (accountId: number) => {
 };
 
 const handleDelete = async (accountId: number) => {
-	const URL = "http://accounts-service:8081/account/delete/" + accountId;
+	const URL = account + ":8081/account/delete/" + accountId;
 	const jwt = require("js-cookie").get("jwt");
 	const response = await fetch(URL, {
 		method: "DELETE",

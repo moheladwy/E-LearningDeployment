@@ -1,9 +1,10 @@
 "use client";
 
+import { course } from "@/app/config";
 import Link from "next/link";
 
 async function getCourseDetails(id: number) {
-	const URL = "http://courses-service:8080/learning/course/" + id;
+	const URL = course + ":8080/learning/course/" + id;
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {

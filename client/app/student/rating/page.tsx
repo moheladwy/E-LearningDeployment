@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { course } from "@/app/config";
 
 const FormSchema = z.object({
 	courseId: z.coerce.number().int().nonnegative(),
@@ -47,7 +48,7 @@ export default function RatingForm() {
 			jwt: cookies.get("jwt"),
 		};
 		console.log(payload);
-		const URL = "http://courses-service:8080/learning/rating/submit";
+		const URL = course + ":8080/learning/rating/submit";
 		const response = await fetch(URL, {
 			method: "POST",
 			headers: {

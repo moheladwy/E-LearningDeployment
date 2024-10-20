@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { course } from "@/app/config";
 
 const FormSchema = z.object({
 	name: z.string().min(2, {
@@ -55,9 +56,9 @@ export default function RegisterForm() {
 			course: requestBody,
 			jwt: cookies.get("jwt"),
 		};
-		const URL = "http://courses-service:8080/learning/course/create";
+		const URL = course + ":8080/learning/course/create";
 		const response = await fetch(
-			"http://courses-service:8080/learning/course/create",
+			course + ":8080/learning/course/create",
 			{
 				method: "POST",
 				headers: {

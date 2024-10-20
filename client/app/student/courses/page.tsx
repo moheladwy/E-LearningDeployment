@@ -12,9 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { CourseCard } from "@/components/course-card";
 import { useState, useEffect } from "react";
+import { course } from "@/app/config";
 
 async function getAllCourses() {
-	const URL: string = "http://courses-service:8080/learning/course/courses";
+	const URL: string = course + ":8080/learning/course/courses";
 	const res = await fetch(URL);
 	const response = await res.json();
 	return response;
