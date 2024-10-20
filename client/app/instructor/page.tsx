@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { UserDropdown } from "@/components/account-dropdown";
-import { account } from "../config";
+import { accountAPI } from "../config";
 
 async function getAccountDetails(id: number) {
-	const URL: string = account + ":8081/account/user/" + id;
+	const URL: string = accountAPI + ":8081/account/user/" + id;
 	// const URL: string = "http://localhost:8081/account/user/" + id;
 	try {
 		const res = await fetch(URL);

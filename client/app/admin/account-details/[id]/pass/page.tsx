@@ -14,7 +14,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { account } from "@/app/config";
+import { accountAPI } from "@/app/config";
 
 const PasswordFormSchema = z.object({
 	password: z.string().min(2, {
@@ -30,7 +30,7 @@ export default function Component({ params }: { params: { id: number } }) {
 			password: data.password,
 		};
 		const response = await fetch(
-			account + ":8081/account/changePass",
+			accountAPI + ":8081/account/changePass",
 			{
 				method: "PUT",
 				headers: {

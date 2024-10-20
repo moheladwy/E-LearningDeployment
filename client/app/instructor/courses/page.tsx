@@ -16,7 +16,7 @@ import { course } from "@/app/config";
 
 async function getAllCourses(id: number) {
 	const URL: string =
-		course + ":8080/learning/course/courses/" + id;
+		courseAPI + ":8080/learning/course/courses/" + id;
 	const res = await fetch(URL);
 	const response = await res.json();
 	return response;

@@ -23,7 +23,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { account } from "../config";
+import { accountAPI } from "../config";
 
 const FormSchema = z.object({
 	username: z.string().min(2, {
@@ -70,7 +70,7 @@ export default function RegisterForm() {
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		// Endpoint: http://accounts-service:8081/account/create
 		const response = await fetch(
-			account + ":8081/account/create/",
+			accountAPI + ":8081/account/create/",
 			{
 				method: "POST",
 				headers: {

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { account } from "./config";
+import { accountAPI } from "./config";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +41,7 @@ export default function LoginForm() {
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		const response = await fetch(
-			account + ":8081/account/login",
+			accountAPI + ":8081/account/login",
 			{
 				method: "POST",
 				headers: {

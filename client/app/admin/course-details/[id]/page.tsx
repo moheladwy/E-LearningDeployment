@@ -18,7 +18,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { get } from "http";
 import { getRedirectError } from "next/dist/client/components/redirect";
-import { course } from "@/app/config";
+import { courseAPI } from "@/app/config";
+
 
 const FormSchema = z.object({
 	name: z.string().min(2, {
@@ -36,7 +37,7 @@ const FormSchema = z.object({
 });
 
 async function getCourseDetails(id: number) {
-	const URL = course + ":8080/learning/course/" + id;
+	const URL = courseAPI + ":8080/learning/course/" + id;
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -50,7 +51,7 @@ async function getCourseDetails(id: number) {
 }
 
 async function getCourseReviews(id: number) {
-	const URL = course + ":8080/learning/rating/course/" + id;
+	const URL = courseAPI + ":8080/learning/rating/course/" + id;
 	const response = await fetch(URL, {
 		method: "GET",
 		headers: {
@@ -73,7 +74,7 @@ async function onSubmit(data: z.infer<typeof FormSchema>) {
 		jwt: cookies.get("jwt"),
 	};
 	// console.log(payload);
-	const URL = course + ":8080/learning/course/update";
+	const URL = courseAPI + ":8080/learning/course/update";
 	const response = await fetch(URL, {
 		method: "PUT",
 		headers: {
@@ -92,7 +93,7 @@ async function onSubmit(data: z.infer<typeof FormSchema>) {
 
 async function deleteCourse(id: number) {
 	const cookies: any = require("js-cookie");
-	const URL = course + ":8080/learning/course/remove/" + id;
+	const URL = courseAPI + ":8080/learning/course/remove/" + id;
 	const response = await fetch(URL, {
 		method: "DELETE",
 		headers: {
