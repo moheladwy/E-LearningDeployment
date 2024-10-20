@@ -69,16 +69,14 @@ export default function RegisterForm() {
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		// Endpoint: http://accounts-service:8081/account/create
-		const response = await fetch(
-			accountAPI + ":8081/account/create/",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+		console.log("accountAPI: " + accountAPI);
+		const response = await fetch(accountAPI + ":8081/account/create/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
 		if (response.ok) {
 			alert("Account created successfully.");
 			router.push("/");

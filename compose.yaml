@@ -23,5 +23,5 @@ services:
         ports:
             - "3000:3000"
         environment:
-            - NEXT_PUBLIC_COURSE=value
-            - NEXT_PUBLIC_ACCOUNT=value
+            - NEXT_PUBLIC_COURSE=localhost
+            - NEXT_PUBLIC_ACCOUNT=localhost

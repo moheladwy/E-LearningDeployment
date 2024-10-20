@@ -4,13 +4,12 @@ import { UserDropdown } from "@/components/account-dropdown";
 import { accountAPI } from "../config";
 
 async function getAccountDetails(id: number) {
-	const URL: string = accountAPI + ":8081/account/user/" + id;
-	// const URL: string = "http://localhost:8081/account/user/" + id;
+	const URL: string = "http://accounts-service" + ":8081/account/user/" + id;
 	try {
 		const res = await fetch(URL);
 		const response = await res.json();
 		const accountDetails: any = response;
-		// console.log(accountDetails);
+		console.log(accountDetails);
 		return accountDetails.name;
 	} catch (error) {
 		return null;
