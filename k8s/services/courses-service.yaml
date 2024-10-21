@@ -15,4 +15,4 @@ spec:
           protocol: TCP
           port: 9990
           targetPort: 9990
-    type: ClusterIP
+    type: NodePort

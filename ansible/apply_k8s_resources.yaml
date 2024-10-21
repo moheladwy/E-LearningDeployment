@@ -1,6 +1,6 @@
 - name: Apply Kubernetes Resources
   hosts: localhost
-  become: yes # Run with sudo if necessary
+  become: true # Run with sudo if necessary
 
   environment:
       KUBECONFIG: "/home/eladwy/.kube/config" # Path to the kubeconfig file
@@ -13,7 +13,7 @@
       - name: Ensure kubectl is installed
         command: kubectl version --client
         register: kubectl_installed
-        ignore_errors: yes
+        ignore_errors: true
 
       - name: Fail if kubectl is not installed
         fail:
@@ -51,7 +51,11 @@
             KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
 
       - name: Apply Ingress
-        command: kubectl apply -f {{ k8s_folder }}/services/ingress.yaml --validate=false
+        command: kubectl apply -f "{{ item }}" --validate=false
+        loop:
+            - "{{ k8s_folder }}/ingress/accounts-ingress.yaml"
+            - "{{ k8s_folder }}/ingress/courses-ingress.yaml"
+            - "{{ k8s_folder }}/ingress/frontend-ingress.yaml"
         register: apply_ingress_output
         environment:
             KUBECONFIG: "{{ lookup('env', 'KUBECONFIG') }}"
