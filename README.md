@@ -87,3 +87,5 @@ This provides a comprehensive overview of the online learning platform's deploym
 ## Auther
 
 -   [Mohamed Al-Adawy](mohamed.h.eladwy@gmail.com)
+
+---
