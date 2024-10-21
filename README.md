@@ -83,7 +83,3 @@ Security is a key aspect of this deployment process. The following measures are 
 ---
 
 This provides a comprehensive overview of the online learning platform's deployment pipeline. Each stage of the pipeline is automated to ensure smooth and reliable deployments.
-
----
-
-Would you like to add or modify any details in this README file?
